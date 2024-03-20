@@ -148,32 +148,32 @@ table {
 
 /* レスポンシブデザイン */
 @media screen and (max-width: 600px) {
+  .table-container {
+    margin: 5px 5px;
+  }
+
   .cell, td, tr {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 38px;
+    height: 38px;
   }
 
   .cell {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .piece-major {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .hold-piece {
     margin: 10px;
     min-height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   
   .hold-piece button {
     width: 32px;
     height: 32px;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 16px;
     margin-right: 5px;
   }
