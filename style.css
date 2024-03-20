@@ -149,8 +149,8 @@ table {
 /* レスポンシブデザイン */
 @media screen and (max-width: 600px) {
   .cell, td, tr {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     font-size: 18px;
   }
 
@@ -171,10 +171,10 @@ table {
   }
   
   .hold-piece button {
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
-    line-height: 30px;
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+    line-height: 16px;
     margin-right: 5px;
   }
 }
