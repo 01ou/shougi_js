@@ -267,9 +267,6 @@ class BoardManager {
         for (const cell of cells) {
             const piece = cell.piece;
             if (piece && piece.team === team && (!excludeKing || piece.constructor !== King) && piece.currentMoveable.length > 0) {
-                console.log("=============");
-                console.log(piece);
-                console.log(piece.currentMoveable);
                 return true;
             }
         }

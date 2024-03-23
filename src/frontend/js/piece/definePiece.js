@@ -26,7 +26,7 @@ class King extends Piece {
         if (checkingPieces.length > 0 && gameManager.checkedTeam === null) {            
             this.check(checkingPieces);
 
-            if (filteredMoveablePositions) {
+            if (filteredMoveablePositions.length == 0) {
                 const isMoveableAllyPiece = this.boardManager.checkIfMoveablePiece(this.team, true);
                 if (!isMoveableAllyPiece) {
                     gameManager.checkmate(!this.team);
