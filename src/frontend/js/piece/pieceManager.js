@@ -86,10 +86,9 @@ class PieceManager {
         return false;
       }
     
-      const moveables = piece.getMoveable(true);
+      const moveables = piece.getCurrentMoveable(false, false, false, position);
       for (const moveable of moveables) {
-        const nextMoveable = PositionManager.addPositions(moveable, position);
-        if (PositionManager.isWithinBoard(nextMoveable)) {
+        if (PositionManager.isWithinBoard(moveable)) {
           return true;
         }
       }
@@ -97,13 +96,13 @@ class PieceManager {
       return false;
     }
 
-    static checkCanPlacing(piece, position) {
+    static checkCanPlanting(piece, position) {
       if (!piece || !position) { //エラーは必要ない
         return false;
       }
 
       const type = piece.constructor;
-      const isCanMove = this.checkCanMoveInsideBoard(piece, position, false);
+      const isCanMove = this.checkCanMoveInsideBoard(piece, position);
 
       if (!isCanMove) {
         return false;
@@ -124,7 +123,7 @@ class PieceManager {
       const containPieces = [];
       const moveablePositions = pieces.reduce((accumulator, piece) => {
         validateNone(piece);
-        const pieceMoveablePositions = piece.getCurrentMoveable(false);
+        const pieceMoveablePositions = piece.getCurrentMoveable(false, false, true);
         validatePositionList(pieceMoveablePositions);
     
         if (!PositionManager.isWithinBoard(targetPosition)) {
@@ -132,7 +131,7 @@ class PieceManager {
         }
     
         pieceMoveablePositions.forEach(position => {
-          if (PositionManager.isMatchPosition(position, targetPosition)) {
+          if (PositionManager.isMatchPosition(position, targetPosition) && !containPieces.includes(piece)) {
             containPieces.push(piece);
           }
           accumulator.push(position);

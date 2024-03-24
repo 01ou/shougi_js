@@ -10,6 +10,7 @@ class Cell {
       this.piece = piece;
       this.isSelect = false;
       this.isMoveable = false;
+      this.canPlanting = false;
       this.createElement();
       this.addClickListener();
       this.boardManager = boardManager;
@@ -47,7 +48,7 @@ class Cell {
     handleEmptyCellClick() {
         // 駒を配置する
         const nowSelectHoldPiece = gameManager.nowSelectHoldPiece;
-        if (PieceManager.checkCanPlacing(nowSelectHoldPiece, this.position)) {
+        if (this.canPlanting) {
             nowSelectHoldPiece.position = this.position;
             this.setPiece(nowSelectHoldPiece);
             gameManager.removePieceFromHold(nowSelectHoldPiece);
@@ -69,6 +70,13 @@ class Cell {
             return;
         }
     }
+
+    updateCanPlanting(isActive, piece = null) {
+        this.canPlanting = isActive && piece && this.isEmpty()
+            && (!piece.isLimitedMove || PieceManager.checkCanPlanting(piece, this.position));
+        
+        this.updateClass();
+    }
   
     isEmpty() {
       return this.piece === null;
@@ -81,6 +89,7 @@ class Cell {
     updateClass() {
       this.element.classList.toggle('select-cell', this.isSelect);
       this.element.classList.toggle('moveable-cell', this.isMoveable);
+      this.element.classList.toggle('can-planting-cell', this.canPlanting);
       if (this.piece) {
         const { isMajorPiece, isPromote, team } = this.piece;
         this.element.classList.toggle('piece-major', isMajorPiece);

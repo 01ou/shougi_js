@@ -6,13 +6,14 @@ const gameManager = GameManager.getInstance();
 
 // ピースクラス
 class Piece {
-    constructor(boardManager, normalName, promoteName, moveType, isMajorPiece=false, position = null, team = false, isPromote = false) {
+    constructor(boardManager, normalName, promoteName, moveType, position = null, team = false, isMajorPiece=false, isLimitedMove = false, isPromote = false) {
         // ピースごとに固定
         this.boardManager = boardManager;
         this.normalName = normalName;
         this.promoteName = promoteName;
         this.isMajorPiece = isMajorPiece;
         this.normalMoveType = moveType;
+        this.isLimitedMove = isLimitedMove;
 
         // 成りで固定の変動
         this.name = this.isPromote ? promoteName : normalName;
@@ -46,15 +47,17 @@ class Piece {
 
         this.currentMoveable = moveablePositions;
         this.limitMovePositions = [];
+        this.getCurrentMoveable()
     }
 
     // 駒の移動可能な位置を返すメソッド
-    getCurrentMoveable(removeAllyPosition = true, currentPosition = this.position) {
+    getCurrentMoveable(removeAllyPosition = true, passPiece = false, passKing = false, currentPosition = this.position) {
         const moveable = this.getMoveable();
-        let moveablePositions = this.addPositionToMoveable(moveable);
+
+        let moveablePositions = this.addPositionToMoveable(moveable, currentPosition);
 
         if (this.moveType === MOVETYPE.STRAIGHT) {
-            moveablePositions = this.stopAndFlattenAndReflectStraight(moveablePositions);
+            moveablePositions = this.stopAndFlattenAndReflectStraight(moveablePositions, passPiece, passKing, currentPosition);
         } else if (this.team === true) {
             moveablePositions = PositionManager.reflectPositions(currentPosition, moveablePositions);
         }
@@ -66,22 +69,22 @@ class Piece {
         return moveablePositions;
     }
 
-    addPositionToMoveable(moveable, position = this.position) {
-        validatePosition(position);
+    addPositionToMoveable(moveable, currentPosition = this.position) {
+        validatePosition(currentPosition);
         let moveableList = [];
         if (this.moveType == MOVETYPE.STRAIGHT) {
             for (const positions of moveable) {
                 validatePositionList(positions);
-                const addedList = PositionManager.addPositionToList(position, positions);
+                const addedList = PositionManager.addPositionToList(currentPosition, positions);
                 moveableList.push(addedList);
             }
         } else {
-            moveableList = PositionManager.addPositionToList(position, moveable);
+            moveableList = PositionManager.addPositionToList(currentPosition, moveable);
         }
         return moveableList;
     }
 
-    stopAndFlattenAndReflectStraight(positionsList, currentPosition = this.position) {
+    stopAndFlattenAndReflectStraight(positionsList, passPiece = false, passKing = false, currentPosition = this.position) {
         let resultList = [];
         for (const positions of positionsList) {
             for (const pos of positions) {
@@ -99,7 +102,7 @@ class Piece {
 
                 resultList.push(position);
 
-                if (cellType !== CELLTYPE.EMPTY) {
+                if (cellType !== CELLTYPE.EMPTY && !passPiece && (!passKing || cellType !== CELLTYPE.ENEMY_KING)) {
                     break;
                 }
             }
@@ -111,7 +114,7 @@ class Piece {
         let posList = [];
         for (const pos of positions) {
             const cellType = this.boardManager.getCellType(pos, this.team);
-            if (cellType === CELLTYPE.EMPTY || cellType === CELLTYPE.ENEMY) {
+            if (cellType !== CELLTYPE.ALLY && cellType !== CELLTYPE.OUT) {
                 posList.push(pos);
             }
         }

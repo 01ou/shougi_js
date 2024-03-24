@@ -34,6 +34,7 @@ const DIRECTIONS = {
     ENEMY: 'ENEMY',
     EMPTY: 'EMPTY',
     OUT: 'OUT',
+    ENEMY_KING: 'ENEMY_KING',
   }
   
   const BOARD_SIZE = 9;

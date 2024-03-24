@@ -156,11 +156,10 @@ class PositionManager {
     static isContainPosition(position, positions) {
         validatePosition(position);
         validateDirections(positions);
-        
+
         return positions.some(pos => pos[0] === position[0] && pos[1] === position[1]);
     }
     
-
     static isMatchPosition(...positions) {
         // 引数の数をチェックする
         if (positions.length < 1) {
@@ -181,7 +180,7 @@ class PositionManager {
         return true;
     }
 
-    static getBetweenPositions(startPosition, endPosition) {
+    static getBetweenPositions(startPosition, endPosition, includeEndPosition) {
         validatePosition(startPosition);
         validatePosition(endPosition);
     
@@ -223,6 +222,10 @@ class PositionManager {
                         positions.push([x, startY]);
                     }
                 }
+            }
+
+            if (includeEndPosition) {
+                positions.push(endPosition);
             }
 
             return positions;

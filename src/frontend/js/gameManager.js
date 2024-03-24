@@ -77,10 +77,12 @@ class GameManager {
         if (!piece || piece.team !== this.nowTeam || this.pauseGame) {
             return;
         }
+
         this.nowSelectCell = null;
         this.nowSelectHoldPiece = piece;
         this.updateDisplayHoldPieces();
-        piece.boardManager.resetAllCellsState()
+        piece.boardManager.resetAllCellsState();
+        piece.boardManager.updateAllCellsCanPlanting(true, piece);
     }
 
     createHoldPiecesElement(elementId, holdPieces) {

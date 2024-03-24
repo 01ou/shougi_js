@@ -91,6 +91,18 @@ class BoardManager {
         return [x, y];
     }
 
+    getAllCells() {
+        let cells = [];
+        this.board.forEach(row => {
+            row.forEach(cell => {
+                if (cell) {
+                    cells.push(cell);
+                }
+            });
+        });
+        return cells;
+    }
+
     getCell(position, throwOutBoardError = true) {
         if (PositionManager.isWithinBoard(position)) {
             const [x, y] = position;
@@ -100,7 +112,7 @@ class BoardManager {
         }
 
         return null;
-    }
+    }    
 
     getPiece(position, throwOutBoardError = true) {
         validateNone(position);
@@ -126,6 +138,8 @@ class BoardManager {
         
         if (piece.team === team) {
             return CELLTYPE.ALLY;
+        } else if(piece.constructor === King) {
+            return CELLTYPE.ENEMY_KING;
         } else {
             return CELLTYPE.ENEMY;
         }
@@ -201,6 +215,7 @@ class BoardManager {
         cells.forEach(cell => {
             cell.setMoveableState(false);
             cell.setSelectState(false);
+            cell.updateCanPlanting(false);
         });
     }
 
@@ -214,16 +229,12 @@ class BoardManager {
         });
     }
 
-    getAllCells() {
-        let cells = [];
-        this.board.forEach(row => {
-            row.forEach(cell => {
-                if (cell) {
-                    cells.push(cell);
-                }
-            });
+    updateAllCellsCanPlanting(isActive, piece = null) {
+        // getAllCells()メソッドでセルのリストを取得
+        const cells = this.getAllCells();
+        cells.forEach(cell => {
+            cell.updateCanPlanting(isActive, piece);
         });
-        return cells;
     }
 
     getPiecesByMoveType(team = null, [range, position] = [null, null], ...moveTypes) {
@@ -272,7 +283,6 @@ class BoardManager {
         }
         return false;
     }
-    
 
     static getInstance() {
         if (!this.instance) {
