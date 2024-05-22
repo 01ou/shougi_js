@@ -111,7 +111,7 @@ class KingManager extends Piece {
                         const betweenPositions = PositionManager.getBetweenPositions(this.position, checkingPosition, true);
                         protectingPiece.limitMovePositions = betweenPositions;
                     }
-                    break; // この方向の探索を終了
+                    break; // この方向の探索を終了 
                 }
                 break;
             }
